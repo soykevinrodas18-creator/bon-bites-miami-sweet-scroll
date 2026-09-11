@@ -71,8 +71,32 @@ button { cursor: pointer; }
 .button-dark { background: var(--foreground); color: var(--background); }
 .hero-kicker, .eyebrow { display: flex; align-items: center; gap: .5rem; font-size: .7rem; font-weight: 900; text-transform: uppercase; }
 .hero-social { width: 2.75rem; height: 2.75rem; border-color: color-mix(in oklab, var(--primary-foreground) 45%, transparent); }
-.marquee { overflow: hidden; border-top: 1px solid color-mix(in oklab, var(--primary-foreground) 25%, transparent); border-bottom: 1px solid color-mix(in oklab, var(--primary-foreground) 25%, transparent); background: var(--accent); color: var(--accent-foreground); white-space: nowrap; }
-.marquee span { display: inline-block; min-width: 200%; padding: .8rem 0; font-family: var(--font-display); font-size: 1rem; font-weight: 900; animation: marquee 24s linear infinite; }
+.marquee {
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  user-select: none;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  border-top: 1px solid color-mix(in oklab, var(--primary-foreground) 25%, transparent);
+  border-bottom: 1px solid color-mix(in oklab, var(--primary-foreground) 25%, transparent);
+}
+.marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  white-space: nowrap;
+  animation: marquee-scroll 35s linear infinite;
+  will-change: transform;
+}
+.marquee-track span {
+  display: inline-block;
+  padding: 0.85rem 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
 .section-shell { padding: 6rem 1.25rem; }
 .section-heading { display: grid; gap: 1.5rem; }
 .display-title { font-family: var(--font-display); font-size: clamp(4rem, 10vw, 7.5rem); font-weight: 900; line-height: .78; text-transform: uppercase; letter-spacing: 0; }
@@ -116,4 +140,119 @@ button { cursor: pointer; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   [data-reveal] { opacity: 1; transform: none; }
+}
+
+/* ============================================
+   INSTAGRAM PHOTO CAROUSEL
+   ============================================ */
+.ig-carousel-root { position: relative; }
+
+.ig-carousel-viewport { overflow: hidden; width: 100%; cursor: grab; }
+.ig-carousel-viewport:active { cursor: grabbing; }
+
+.ig-carousel-container {
+  display: flex;
+  gap: 0.65rem;
+  padding: 0 1.25rem;
+}
+
+.ig-carousel-slide {
+  position: relative;
+  flex: 0 0 calc(50% - 0.325rem);
+  overflow: hidden;
+  border: 1px solid var(--foreground);
+  background: var(--muted);
+}
+
+@media (min-width: 640px) {
+  .ig-carousel-slide { flex: 0 0 calc(33.333% - 0.44rem); }
+}
+
+@media (min-width: 1024px) {
+  .ig-carousel-slide { flex: 0 0 calc(25% - 0.49rem); }
+}
+
+.ig-carousel-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.ig-carousel-slide:hover .ig-carousel-img { transform: scale(1.05); }
+
+.ig-carousel-overlay {
+  position: absolute;
+  inset: auto 0.75rem 0.75rem;
+  padding: 0.55rem 0.7rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 0.6rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: 0.25s ease;
+  pointer-events: none;
+}
+.ig-carousel-slide:hover .ig-carousel-overlay { opacity: 1; transform: none; }
+
+/* Prev / Next buttons */
+.ig-carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.ig-carousel-btn:hover { background: var(--foreground); transform: translateY(calc(-50% - 2px)); }
+.ig-carousel-btn-prev { left: 1.5rem; }
+.ig-carousel-btn-next { right: 1.5rem; }
+
+/* Dots */
+.ig-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding: 0 1.25rem;
+}
+.ig-carousel-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 0;
+  background: var(--muted-foreground);
+  opacity: 0.3;
+  border: none;
+  transition: opacity 0.2s ease, background 0.2s ease, width 0.2s ease;
+}
+.ig-carousel-dot-active {
+  background: var(--primary);
+  opacity: 1;
+  width: 1.5rem;
+}
+
+@keyframes marquee-scroll {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ─── Infinite gallery scroll ─── */
+@keyframes ig-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ig-infinite-track {
+  animation: ig-scroll 30s linear infinite;
+  will-change: transform;
+}
+.ig-infinite-track:hover {
+  animation-play-state: paused;
 }
